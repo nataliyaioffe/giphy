@@ -149,7 +149,7 @@ ul {
 
 /* /END GENERAL STYLING */
 body {
-  background: darkgrey; }
+  background: #888; }
 
 .App {
   text-align: center; }
@@ -160,12 +160,24 @@ body {
 .wrapper {
   width: 75vw;
   max-width: 1220px;
-  border: 1px solid black;
+  background: #ccc;
   margin: 0 auto; }
 
 ul {
   display: flex;
-  flex-wrap: wrap; }
+  flex-wrap: wrap;
+  justify-content: center; }
 
 li {
-  width: 20%; }
+  border-radius: 3px;
+  border: 1px solid #888;
+  width: calc(20% - 20px);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 0 5px 10px 5px; }
+
+button {
+  width: 100px;
+  height: 25px; }

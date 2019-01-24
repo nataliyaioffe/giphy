@@ -11,6 +11,8 @@ class App extends Component {
   };
 
   upVote = e => {
+    e.preventDefault();
+
     const newImageArray = [...this.state.imageArray];
     const upVotedURL = e.target.previousSibling.src;
     newImageArray.map(object => {
@@ -24,6 +26,8 @@ class App extends Component {
   };
 
   downVote = e => {
+    e.preventDefault();
+
     const newImageArray = [...this.state.imageArray];
     const downVotedURL = e.target.previousElementSibling.previousSibling.src;
     newImageArray.map(object => {
@@ -59,14 +63,14 @@ class App extends Component {
           const imageURL = imageObject.images.fixed_height.url;
           newImageArray.push({
             url: imageURL,
-            vote: null
+            vote: 0
           });
           this.setState({
             imageArray: newImageArray
           });
         });
       });
-    e.currentTarget.reset();
+    // e.currentTarget.reset();
     const newOffset = this.state.offset + 25;
     this.setState({
       offset: newOffset
@@ -75,19 +79,21 @@ class App extends Component {
 
   sort = () => {
     const newImageArray = [...this.state.imageArray];
-    newImageArray.sort(function(a,b) {
+    newImageArray.sort(function(a, b) {
       return b.vote - a.vote;
     });
     this.setState({
       imageArray: newImageArray
-    })
+    });
   };
 
   render() {
     return (
       <div className="App">
         <header>
-          <h1>GIPHY</h1>
+          <div className="wrapper">
+            <h1>GIPHY</h1>
+          </div>
         </header>
         <div className="wrapper">
           <form action="" onSubmit={this.call}>
