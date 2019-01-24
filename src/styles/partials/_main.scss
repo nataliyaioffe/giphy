@@ -1,0 +1,27 @@
+body {
+    background: darkgrey;
+}
+
+.App {
+    text-align: center;
+}
+
+.image {
+    width: 200px;
+}
+
+.wrapper {
+    width: 75vw;
+    max-width: 1220px;
+    border: 1px solid black;
+    margin: 0 auto;
+}
+
+ul {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+li {
+    width: 20%;
+}
