@@ -1,20 +1,27 @@
 body {
   background: #888;
-}
-
-.App {
   text-align: center;
 }
 
-.image {
-  width: 200px;
-}
-
-.wrapper {
+.App {
   width: 75vw;
   max-width: 1220px;
   background: #ccc;
   margin: 0 auto;
+}
+
+header {
+  padding: 30px 0;
+}
+
+
+.current-search-controls {
+    padding: 20px 0;
+    display: flex;
+    justify-content: center;
+}
+.image {
+  width: 200px;
 }
 
 ul {
@@ -35,6 +42,6 @@ li {
 }
 
 button {
-  width: 100px;
+  width: 150px;
   height: 25px;
 }

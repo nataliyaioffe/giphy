@@ -92,25 +92,29 @@ class App extends Component {
       <div className="App">
         <header>
           <div className="wrapper">
-            <h1>GIPHY</h1>
+            <h1>GIPHY THING</h1>
           </div>
         </header>
-        <div className="wrapper">
-          <form action="" onSubmit={this.call}>
-            <input
-              type="text"
-              name="searchTerm"
-              onChange={this.handleChange}
-              required
-            />
-            <button type="submit">Axios</button>
-          </form>
+        <main>
+          <div className="search">
+            <form action="" onSubmit={this.call}>
+              <input
+                type="text"
+                name="searchTerm"
+                onChange={this.handleChange}
+                required
+              />
+              <button type="submit">Search</button>
+            </form>
 
-          <button onClick={this.sort}>Sort</button>
+            <div className="current-search-controls">
+              <button onClick={this.sort}>Sort Results</button>
 
-          <form action="" onSubmit={this.call}>
-            <button type="submit">Next</button>
-          </form>
+              <form action="" onSubmit={this.call}>
+                <button type="submit">Next Page</button>
+              </form>
+            </div>
+          </div>
 
           <ul>
             {this.state.imageArray.map((key, index) => {
@@ -125,7 +129,7 @@ class App extends Component {
               );
             })}
           </ul>
-        </div>
+        </main>
       </div>
     );
   }
