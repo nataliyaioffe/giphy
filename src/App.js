@@ -24,7 +24,6 @@ class App extends Component {
   };
 
   downVote = e => {
-    console.log("downvote");
     const newImageArray = [...this.state.imageArray];
     const downVotedURL = e.target.previousElementSibling.previousSibling.src;
     newImageArray.map(object => {
@@ -60,9 +59,8 @@ class App extends Component {
           const imageURL = imageObject.images.fixed_height.url;
           newImageArray.push({
             url: imageURL,
-            vote: 0
+            vote: null
           });
-          // console.log(newImageArray);
           this.setState({
             imageArray: newImageArray
           });
@@ -73,6 +71,16 @@ class App extends Component {
     this.setState({
       offset: newOffset
     });
+  };
+
+  sort = () => {
+    const newImageArray = [...this.state.imageArray];
+    newImageArray.sort(function(a,b) {
+      return b.vote - a.vote;
+    });
+    this.setState({
+      imageArray: newImageArray
+    })
   };
 
   render() {
@@ -91,6 +99,8 @@ class App extends Component {
             />
             <button type="submit">Axios</button>
           </form>
+
+          <button onClick={this.sort}>Sort</button>
 
           <form action="" onSubmit={this.call}>
             <button type="submit">Next</button>
