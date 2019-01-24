@@ -10,13 +10,30 @@ class App extends Component {
     offset: 0
   };
 
-  upVote = (e) => {
-    console.log("upvote");
-  }
+  upVote = e => {
+    const newImageArray = [...this.state.imageArray];
+    const upVotedURL = e.target.previousSibling.src;
+    newImageArray.map(object => {
+      if (object.url === upVotedURL) {
+        object.vote += 1;
+      }
+      this.setState({
+        imageArray: newImageArray
+      });
+    });
+  };
 
- downVote = (e) => {
+  downVote = e => {
     console.log("downvote");
-  }
+    const newImageArray = [...this.state.imageArray];
+    const downVotedURL = e.target.previousElementSibling.previousSibling.src;
+    newImageArray.map(object => {
+      if (object.url === downVotedURL) {
+        object.vote -= 1;
+      }
+      this.setState({ imageArray: newImageArray });
+    });
+  };
 
   handleChange = e => {
     const searchTerm = e.currentTarget.value;
@@ -41,7 +58,11 @@ class App extends Component {
 
         images.map(imageObject => {
           const imageURL = imageObject.images.fixed_height.url;
-          newImageArray.push(imageURL);
+          newImageArray.push({
+            url: imageURL,
+            vote: 0
+          });
+          // console.log(newImageArray);
           this.setState({
             imageArray: newImageArray
           });
@@ -61,22 +82,33 @@ class App extends Component {
           <h1>GIPHY</h1>
         </header>
         <div className="wrapper">
-        <form action="" onSubmit={this.call}>
-          <input type="text" name="searchTerm" onChange={this.handleChange} required/>
-          <button type="submit">Axios</button>
-        </form>
+          <form action="" onSubmit={this.call}>
+            <input
+              type="text"
+              name="searchTerm"
+              onChange={this.handleChange}
+              required
+            />
+            <button type="submit">Axios</button>
+          </form>
 
-        <form action="" onSubmit={this.call}>
-          <button type="submit">Next</button>
-        </form>
+          <form action="" onSubmit={this.call}>
+            <button type="submit">Next</button>
+          </form>
 
-        <ul>
-          {this.state.imageArray.map((key, index) => {
-            return (
-              <Gif key={key} index={index} url={this.state.imageArray[index]} upVote={this.upVote} downVote={this.downVote}/>
-            );
-          })}
-        </ul>
+          <ul>
+            {this.state.imageArray.map((key, index) => {
+              return (
+                <Gif
+                  key={key}
+                  index={index}
+                  imageObject={this.state.imageArray[index]}
+                  upVote={this.upVote}
+                  downVote={this.downVote}
+                />
+              );
+            })}
+          </ul>
         </div>
       </div>
     );
