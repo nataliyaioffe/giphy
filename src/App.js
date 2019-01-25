@@ -7,6 +7,7 @@ class App extends Component {
   state = {
     imageArray: [],
     searchTerm: "",
+    APISearchTerm: "",
     offset: 0
   };
 
@@ -17,7 +18,7 @@ class App extends Component {
     const upVotedURL = e.target.previousSibling.src;
     newImageArray.map(object => {
       if (object.url === upVotedURL) {
-        object.vote += 1;
+        object.score += 1;
       }
       this.setState({
         imageArray: newImageArray
@@ -32,55 +33,81 @@ class App extends Component {
     const downVotedURL = e.target.previousElementSibling.previousSibling.src;
     newImageArray.map(object => {
       if (object.url === downVotedURL) {
-        object.vote -= 1;
+        object.score -= 1;
       }
       this.setState({ imageArray: newImageArray });
     });
   };
 
   handleChange = e => {
-    const searchTerm = e.currentTarget.value;
     this.setState({
-      searchTerm: searchTerm
+      searchTerm: e.currentTarget.value
     });
   };
 
-  call = e => {
-    if (e) {
-      e.preventDefault();
-    }
+  search = e => {
+    e.preventDefault();
+    e.currentTarget.reset();
+
+    this.setState({
+        APISearchTerm: this.state.searchTerm,
+        offset: 0
+      },() => this.getGiphys()
+    );
+  };
+
+  getGiphys = () => {
     const newImageArray = [];
+
     axios
       .get(
         `http://api.giphy.com/v1/gifs/search?q=${
-          this.state.searchTerm
+          this.state.APISearchTerm
         }&offset=${this.state.offset}&api_key=Y32GRFlMiF4Q483R3q1hoglYD95E9ivv`
       )
       .then(res => {
-        const images = res.data.data;
-
-        images.map(imageObject => {
+        res.data.data.map(imageObject => {
           const imageURL = imageObject.images.fixed_height.url;
-          newImageArray.push({
-            url: imageURL,
-            vote: 0
+          newImageArray.push({ 
+            url: imageURL, 
+            score: 0 
           });
-          this.setState({
+          this.setState({ 
             imageArray: newImageArray
-          });
+           });
         });
       });
-    // e.currentTarget.reset();
+  };
+
+  nextPage = e => {
+    e.preventDefault();
     const newOffset = this.state.offset + 25;
+
+    this.setState({
+        offset: newOffset
+      },() => this.getGiphys()
+    );
+  };
+
+  goBack = e => {
+    e.preventDefault();
+    const newOffset = this.state.offset - 25;
+
+    if (newOffset < 0) {
+      newOffset = 0
+    }
+
     this.setState({
       offset: newOffset
-    });
-  };
+    }, () => this.getGiphys()
+    );
+  }
+
 
   sort = () => {
     const newImageArray = [...this.state.imageArray];
     newImageArray.sort(function(a, b) {
-      return b.vote - a.vote;
+      return b.score - a.score;
     });
     this.setState({
       imageArray: newImageArray
@@ -97,7 +124,7 @@ class App extends Component {
         </header>
         <main>
           <div className="search">
-            <form action="" onSubmit={this.call}>
+            <form action="" onSubmit={this.search}>
               <input
                 type="text"
                 name="searchTerm"
@@ -107,12 +134,10 @@ class App extends Component {
               <button type="submit">Search</button>
             </form>
 
-            <div className="current-search-controls">
+            <div className="current-search-buttons">
               <button onClick={this.sort}>Sort Results</button>
-
-              <form action="" onSubmit={this.call}>
-                <button type="submit">Next Page</button>
-              </form>
+              <button onClick={this.nextPage }>Next Page</button>
+              <button onClick={this.goBack}>Back</button>
             </div>
           </div>
 

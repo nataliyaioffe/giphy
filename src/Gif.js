@@ -7,7 +7,7 @@ class Gif extends Component {
         <img className="image" src={this.props.imageObject.url} alt="" />
         <button onClick={this.props.upVote}>upvote</button>
         <button onClick={this.props.downVote}>downVote</button>
-        <p>Score: {this.props.imageObject.vote}</p>
+        <p>Score: {this.props.imageObject.score}</p>
       </li>;
   }
 }
