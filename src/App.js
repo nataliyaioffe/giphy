@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import axios from "axios";
 import "./styles/App.css";
-import Gif from "./Gif";
+import Gif from "./components/Gif";
+import firebase from "./components/firebase";
 
 class App extends Component {
   state = {
@@ -10,6 +11,13 @@ class App extends Component {
     APISearchTerm: "",
     offset: 0
   };
+
+  componentDidMount() {
+    const dbRef = firebase.database().ref();
+    dbRef.on("value", response => {
+      console.log(response.val());
+    });
+  }
 
   upVote = e => {
     e.preventDefault();
@@ -49,10 +57,13 @@ class App extends Component {
     e.preventDefault();
     e.currentTarget.reset();
 
-    this.setState({
+    this.setState(
+      {
+        searchTerm: "",
         APISearchTerm: this.state.searchTerm,
         offset: 0
-      },() => this.getGiphys()
+      },
+      () => this.getGiphys()
     );
   };
 
@@ -68,14 +79,18 @@ class App extends Component {
       .then(res => {
         res.data.data.map(imageObject => {
           const imageURL = imageObject.images.fixed_height.url;
-          newImageArray.push({ 
-            url: imageURL, 
-            score: 0 
+          newImageArray.push({
+            url: imageURL,
+            score: 0
           });
-          this.setState({ 
+
+          this.setState({
             imageArray: newImageArray
-           });
+          });
         });
+
+        const dbRef = firebase.database().ref(`/offset${this.state.offset}`);
+        dbRef.push(this.state.imageArray);
       });
   };
 
@@ -83,9 +98,11 @@ class App extends Component {
     e.preventDefault();
     const newOffset = this.state.offset + 25;
 
-    this.setState({
+    this.setState(
+      {
         offset: newOffset
-      },() => this.getGiphys()
+      },
+      () => this.getGiphys()
     );
   };
 
@@ -94,15 +111,16 @@ class App extends Component {
     const newOffset = this.state.offset - 25;
 
     if (newOffset < 0) {
-      newOffset = 0
+      newOffset = 0;
     }
 
-    this.setState({
-      offset: newOffset
-    }, () => this.getGiphys()
+    this.setState(
+      {
+        offset: newOffset
+      },
+      () => this.getGiphys()
     );
-  }
-
+  };
 
   sort = () => {
     const newImageArray = [...this.state.imageArray];
@@ -136,7 +154,7 @@ class App extends Component {
 
             <div className="current-search-buttons">
               <button onClick={this.sort}>Sort Results</button>
-              <button onClick={this.nextPage }>Next Page</button>
+              <button onClick={this.nextPage}>Next Page</button>
               <button onClick={this.goBack}>Back</button>
             </div>
           </div>
