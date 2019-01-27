@@ -20,12 +20,18 @@ class Gif extends Component {
       imageObject.id
     }/200.gif`;
 
+    const test = Object.values(userData)
+    let savedScore;
+    test.map(entry => {
+      if (entry.id === gifID)
+        savedScore = entry.score;
+    })
 
     return <li id={gifID}>
         <img className="image" src={imagePath} alt="" />
         <button onClick={this.handleUpvote}>upvote</button>
         <button onClick={this.handleDownvote}>downVote</button>
-      {/* <p>Score: {test.score}|| {this.props.imageObject.score}</p> */}
+      <p>Score: {savedScore} </p>
       </li>;
   }
 }
