@@ -9,43 +9,83 @@ class App extends Component {
     imageArray: [],
     searchTerm: "",
     APISearchTerm: "",
-    offset: 0
+    offset: 0,
+    userData: {}
   };
 
   componentDidMount() {
-    const dbRef = firebase.database().ref();
-    dbRef.on("value", response => {
-      console.log(response.val());
+    this.dbRef = firebase.database().ref();
+    this.dbRef.on("value", snapshot => {
+      this.setState({
+        userData: snapshot.val() || {}
+      });
     });
   }
 
-  upVote = e => {
-    e.preventDefault();
+  upVote = gifID => {
+    this.setState({
+      gifID: gifID
+    });
 
     const newImageArray = [...this.state.imageArray];
-    const upVotedURL = e.target.previousSibling.src;
-    newImageArray.map(object => {
-      if (object.url === upVotedURL) {
-        object.score += 1;
+    const values = Object.values(newImageArray);
+
+    values.map(value => {
+      if (value.id === gifID) {
+        value.score += 1;
+        this.sendFB(value, gifID);
       }
-      this.setState({
-        imageArray: newImageArray
-      });
     });
   };
 
-  downVote = e => {
-    e.preventDefault();
+  // keys.map(key => {
+  //   if (imageObject.id === gifID) {
+  //     imageObject.score += 1;
+  //     gifFBID = {
+  //       id: gifID,
+  //       score: object.score
+  //     };
+  // }
+  // console.log(keys);
 
-    const newImageArray = [...this.state.imageArray];
-    const downVotedURL = e.target.previousElementSibling.previousSibling.src;
-    newImageArray.map(object => {
-      if (object.url === downVotedURL) {
-        object.score -= 1;
-      }
-      this.setState({ imageArray: newImageArray });
-    });
+  // keys.map((key) = () => {
+  // console.log("key", key);
+  // })
+  // let gifFBID = {};
+
+  // newImageArray.map((imageObject,i)=> {
+  //   if (imageObject.id === gifID) {
+  //     imageObject.score += 1;
+  //     // gifFBID = {
+  //       // id: gifID,
+  //       // score: object.score
+  //     // };
+  //     this.setState({
+  //         gifID: gifID,
+  //         score: imageObject.score
+  //       },
+  //       () => this.sendFB()
+  //     );
+
+  //   }
+  // });
+  // };
+
+  sendFB = (value, gifID) => {
+    this.dbRef = firebase.database().ref(`/${gifID}`);
+    this.dbRef.update(value);
   };
+
+  // downVote = gifID => {
+  //   const newImageArray = [...this.state.imageArray];
+
+  //   newImageArray.map(object => {
+  //     if (object.id === gifID) {
+  //       object.score -= 1;
+  //     }
+  //     this.setState({ imageArray: newImageArray });
+  //   });
+  // };
 
   handleChange = e => {
     this.setState({
@@ -78,9 +118,11 @@ class App extends Component {
       )
       .then(res => {
         res.data.data.map(imageObject => {
-          const imageURL = imageObject.images.fixed_height.url;
+          // const imageURL = imageObject.images.fixed_height.url;
           newImageArray.push({
-            url: imageURL,
+            id: imageObject.id,
+            offset: this.state.offset + 25,
+            // url: imageURL,
             score: 0
           });
 
@@ -88,9 +130,6 @@ class App extends Component {
             imageArray: newImageArray
           });
         });
-
-        const dbRef = firebase.database().ref(`/offset${this.state.offset}`);
-        dbRef.push(this.state.imageArray);
       });
   };
 
@@ -168,6 +207,7 @@ class App extends Component {
                   imageObject={this.state.imageArray[index]}
                   upVote={this.upVote}
                   downVote={this.downVote}
+                  userData={this.state.userData}
                 />
               );
             })}

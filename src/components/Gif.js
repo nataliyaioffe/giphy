@@ -1,13 +1,31 @@
 import React, { Component } from "react";
 
 class Gif extends Component {
-  render(props) {
+  handleUpvote = () => {
+    this.props.upVote(this.props.imageObject.id);
+  };
 
-    return <li>
-        <img className="image" src={this.props.imageObject.url} alt="" />
-        <button onClick={this.props.upVote}>upvote</button>
-        <button onClick={this.props.downVote}>downVote</button>
-        <p>Score: {this.props.imageObject.score}</p>
+  handleDownvote = () => {
+    this.props.downVote(this.props.imageObject.id);
+  };
+
+  render(props) {
+    const {
+      imageObject,
+      userData
+    } = this.props;
+
+    const gifID = imageObject.id;
+    const imagePath = `https://media2.giphy.com/media/${
+      imageObject.id
+    }/200.gif`;
+
+
+    return <li id={gifID}>
+        <img className="image" src={imagePath} alt="" />
+        <button onClick={this.handleUpvote}>upvote</button>
+        <button onClick={this.handleDownvote}>downVote</button>
+      {/* <p>Score: {test.score}|| {this.props.imageObject.score}</p> */}
       </li>;
   }
 }
