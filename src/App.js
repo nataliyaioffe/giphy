@@ -23,69 +23,28 @@ class App extends Component {
   }
 
   upVote = gifID => {
-    this.setState({
-      gifID: gifID
-    });
-
     const newImageArray = [...this.state.imageArray];
-    const values = Object.values(newImageArray);
 
-    values.map(value => {
-      if (value.id === gifID) {
-        value.score += 1;
-        this.sendFB(value, gifID);
+    newImageArray.map((image, i) => {
+      if (image.id === gifID) {
+        image.score += 1;
+        this.sendFB(image, gifID);
       }
     });
+
+    this.setState({
+      imageArray: newImageArray
+    });
   };
 
-  // keys.map(key => {
-  //   if (imageObject.id === gifID) {
-  //     imageObject.score += 1;
-  //     gifFBID = {
-  //       id: gifID,
-  //       score: object.score
-  //     };
-  // }
-  // console.log(keys);
+  downVote = gifID => {
+    console.log("downvote");
+  };
 
-  // keys.map((key) = () => {
-  // console.log("key", key);
-  // })
-  // let gifFBID = {};
-
-  // newImageArray.map((imageObject,i)=> {
-  //   if (imageObject.id === gifID) {
-  //     imageObject.score += 1;
-  //     // gifFBID = {
-  //       // id: gifID,
-  //       // score: object.score
-  //     // };
-  //     this.setState({
-  //         gifID: gifID,
-  //         score: imageObject.score
-  //       },
-  //       () => this.sendFB()
-  //     );
-
-  //   }
-  // });
-  // };
-
-  sendFB = (value, gifID) => {
+  sendFB = (image, gifID) => {
     this.dbRef = firebase.database().ref(`/${gifID}`);
-    this.dbRef.update(value);
+    this.dbRef.update(image);
   };
-
-  // downVote = gifID => {
-  //   const newImageArray = [...this.state.imageArray];
-
-  //   newImageArray.map(object => {
-  //     if (object.id === gifID) {
-  //       object.score -= 1;
-  //     }
-  //     this.setState({ imageArray: newImageArray });
-  //   });
-  // };
 
   handleChange = e => {
     this.setState({
@@ -114,15 +73,14 @@ class App extends Component {
       .get(
         `http://api.giphy.com/v1/gifs/search?q=${
           this.state.APISearchTerm
-        }&offset=${this.state.offset}&api_key=Y32GRFlMiF4Q483R3q1hoglYD95E9ivv`
+        }&offset=${
+          this.state.offset
+        }&api_key=Y32GRFlMiF4Q483R3q1hoglYD95E9ivv&limit=25`
       )
       .then(res => {
         res.data.data.map(imageObject => {
-          // const imageURL = imageObject.images.fixed_height.url;
           newImageArray.push({
             id: imageObject.id,
-            offset: this.state.offset + 25,
-            // url: imageURL,
             score: 0
           });
 
@@ -171,6 +129,10 @@ class App extends Component {
     });
   };
 
+  focus = gifID => {
+    console.log(gifID);
+  };
+
   render() {
     return (
       <div className="App">
@@ -198,16 +160,17 @@ class App extends Component {
             </div>
           </div>
 
-          <ul>
+          <ul className="gallery">
             {this.state.imageArray.map((key, index) => {
               return (
                 <Gif
-                  key={key}
+                  key={key.id}
                   index={index}
                   imageObject={this.state.imageArray[index]}
                   upVote={this.upVote}
                   downVote={this.downVote}
                   userData={this.state.userData}
+                  focus={this.focus}
                 />
               );
             })}

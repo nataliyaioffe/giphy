@@ -9,29 +9,31 @@ class Gif extends Component {
     this.props.downVote(this.props.imageObject.id);
   };
 
+  handleClick = (e) => {
+    // this.props.focus(this.props.imageObject.id);
+    // document.getElementById("image").focus();
+    console.log(e.target);
+    e.target.focus();
+  }
+
+
   render(props) {
-    const {
-      imageObject,
-      userData
-    } = this.props;
+    const { imageObject, userData } = this.props;
 
     const gifID = imageObject.id;
-    const imagePath = `https://media2.giphy.com/media/${
-      imageObject.id
-    }/200.gif`;
+    const imagePath = `https://media2.giphy.com/media/${imageObject.id}/200w_d.gif`;
 
-    const test = Object.values(userData)
+    const test = Object.values(userData);
     let savedScore;
     test.map(entry => {
-      if (entry.id === gifID)
-        savedScore = entry.score;
-    })
+      if (entry.id === gifID) savedScore = entry.score;
+    });
 
-    return <li id={gifID}>
-        <img className="image" src={imagePath} alt="" />
+    return <li>
+      <img className="image" id={gifID} src={imagePath} onClick={this.handleClick} alt="" />
         <button onClick={this.handleUpvote}>upvote</button>
         <button onClick={this.handleDownvote}>downVote</button>
-      <p>Score: {savedScore} </p>
+        <p>Score: {savedScore} </p>
       </li>;
   }
 }

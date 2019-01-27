@@ -149,40 +149,40 @@ ul {
 
 /* /END GENERAL STYLING */
 body {
-  background: #888;
+  background: black;
   text-align: center; }
 
 .App {
-  width: 75vw;
+  width: 95vw;
   max-width: 1220px;
-  background: #ccc;
   margin: 0 auto; }
 
 header {
   padding: 30px 0; }
+
+h1,
+p {
+  color: white; }
 
 .current-search-buttons {
   padding: 20px 0;
   display: flex;
   justify-content: center; }
 
-.image {
-  width: 200px; }
-
-ul {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center; }
+.gallery {
+  display: grid;
+  grid-gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 30%));
+  grid-auto-flow: row dense; }
 
 li {
+  border: 1px solid white;
   border-radius: 3px;
-  border: 1px solid #888;
-  width: calc(20% - 20px);
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  margin: 0 5px 10px 5px; }
+  grid-column-start: auto;
+  grid-row-start: auto; }
+
+img:hover {
+  border: 2px solid red; }
 
 button {
   width: 150px;
